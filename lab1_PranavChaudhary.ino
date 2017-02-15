@@ -36,7 +36,6 @@ long measuredistance()
   // of the ping to the reception of its echo off of an object.
     pinMode(A4, INPUT);
     duration = pulseIn(A4, HIGH);
-
     
    // convert the time into a distance
     cm = microsecondsToCentimeters(duration);
