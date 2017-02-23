@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 Servo myservo;
-float cm_pos[9],cm_pos1[9]; // for cm measurement at each position of servo
+float cm_pos[3],cm_pos1[3]; // for cm measurement at each position of servo
 
 void setup() {
   // put your setup code here, to run once:
@@ -53,9 +53,9 @@ float measuredistance()
 void servo()
 { 
   const int pi=3.14;
-  int pos[9]={30, 45, 60, 75, 90, 105, 120, 135, 150};
+  int pos[3]={60, 90, 120};
 
-  for(int i=0;i<9; i++)
+  for(int i=0;i<3; i++)
  {
    myservo.write(pos[i]);
    delay(10);
@@ -65,9 +65,9 @@ void servo()
 void servo1()
 { 
   const int pi=3.14;
-  int pos[9]={30, 45, 60, 75, 90, 105, 120, 135, 150};
+  int pos[3]={60, 90, 120};
 
-  for(int i=8;i>=0; i--)
+  for(int i=2;i>=0; i--)
  {
    myservo.write(pos[i]);
    delay(10);
@@ -80,10 +80,9 @@ void forward()
  int in1=6,in2=7,in3=8,in4=9,enA=5,enB=11; 
 
    
-   float cm, speed1,speed2;
-   cm=measuredistance();
-   speed1=map(cm_pos[4], 0, 300, 0, 255);
-      speed2=speed1+5;
+   float speed1,speed2;
+   speed1=map(cm_pos[1], 0, 300, 0, 255);
+   speed2=speed1+5;
    digitalWrite(in3, LOW);
    digitalWrite(in4, HIGH);
    analogWrite(enB, speed1);
@@ -98,9 +97,8 @@ void forward1()
  int in1=6,in2=7,in3=8,in4=9,enA=5,enB=11; 
 
    
-   float cm, speed1,speed2;
-   cm=measuredistance();
-   speed1=map(cm_pos1[4], 0, 300, 0, 255);
+   float speed1,speed2;
+   speed1=map(cm_pos1[1], 0, 300, 0, 255);
    speed2=speed1+5;
    digitalWrite(in3, LOW);
    digitalWrite(in4, HIGH);
@@ -169,12 +167,12 @@ void controller(long cm1)
 {
   int x = 0, x1=0;
   unsigned long time1;
-  forward();
-  
+
   servo();
+  forward();
   float large=cm_pos[0];
 
-    for( int j=0;j<9;j++)
+    for( int j=0;j<3;j++)
     {
       if(cm_pos[j]>large)
       {
@@ -182,28 +180,28 @@ void controller(long cm1)
         x = j;
       }
     }
-    switch(x1)
+    switch(x)
     {
+//      case 0: 
+//              time1 = millis();
+//              while(millis()<=time1+200)
+//              {
+//              right();
+//              Serial.print(" Right 30 ");
+//              Serial.println();
+//              }
+//              break;
+//                
+//     case 1: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              right();
+//              Serial.print(" Right 45 ");
+//              Serial.println();
+//              }
+//              break;
       case 0: 
-              time1 = millis();
-              while(millis()<=time1+200)
-              {
-              right();
-              Serial.print(" Right 30 ");
-              Serial.println();
-              }
-              break;
-                
-     case 1: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              right();
-              Serial.print(" Right 45 ");
-              Serial.println();
-              }
-              break;
-      case 2: 
               time1 = millis();
               while(millis()<=time1+200)
               {
@@ -212,30 +210,30 @@ void controller(long cm1)
               Serial.println();
               }
               break;
-      case 3: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              forward_right(70,90);
-              Serial.print(" Right 75 ");
-              Serial.println();
-              }
-              break;
-     case 4: 
+//      case 3: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              forward_right(70,90);
+//              Serial.print(" Right 75 ");
+//              Serial.println();
+//              }
+//              break;
+     case 1: 
               Serial.print(" Forward ");
               Serial.println();
               
               break;
-      case 5: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              forward_left(90,75);
-              Serial.print(" left 75 ");
-              Serial.println();
-              }
-              break;
-      case 6: 
+//      case 5: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              forward_left(90,75);
+//              Serial.print(" left 75 ");
+//              Serial.println();
+//              }
+//              break;
+      case 2: 
               time1 = millis();
               while(millis()<=time1+150)
               {
@@ -244,62 +242,62 @@ void controller(long cm1)
               Serial.println();
               }
               break;
-      case 7: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              left();
-              Serial.print(" Left 45 ");
-              Serial.println();
-              }
-              break;
-      case 8: 
-              time1 = millis();
-              while(millis()<=time1+200)
-              {
-              left();
-              Serial.print(" Left 30 ");
-              Serial.println();
-              }
-              break;
+//      case 7: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              left();
+//              Serial.print(" Left 45 ");
+//              Serial.println();
+//              }
+//              break;
+//      case 8: 
+//              time1 = millis();
+//              while(millis()<=time1+200)
+//              {
+//              left();
+//              Serial.print(" Left 30 ");
+//              Serial.println();
+//              }
+//              break;
  
       default:
               break;        
     }
-   forward1();
-    servo1();
-    float large1=cm_pos1[0];
+  servo1();
+  forward1();
+  float large1=cm_pos1[0];
 
-    for( int j=0;j<9;j++)
+    for( int k=0;k<3;k++)
     {
-      if(cm_pos1[j]>large1)
+      if(cm_pos1[j]>large)
       {
         large1 = cm_pos1[j];
-        x1 = j;
+        x1 = k;
       }
     }
     switch(x1)
     {
+//      case 0: 
+//              time1 = millis();
+//              while(millis()<=time1+200)
+//              {
+//              right();
+//              Serial.print(" Right 30 ");
+//              Serial.println();
+//              }
+//              break;
+//                
+//     case 1: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              right();
+//              Serial.print(" Right 45 ");
+//              Serial.println();
+//              }
+//              break;
       case 0: 
-              time1 = millis();
-              while(millis()<=time1+200)
-              {
-              right();
-              Serial.print(" Right 30 ");
-              Serial.println();
-              }
-              break;
-                
-     case 1: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              right();
-              Serial.print(" Right 45 ");
-              Serial.println();
-              }
-              break;
-      case 2: 
               time1 = millis();
               while(millis()<=time1+200)
               {
@@ -308,30 +306,30 @@ void controller(long cm1)
               Serial.println();
               }
               break;
-      case 3: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              forward_right(70,90);
-              Serial.print(" Right 75 ");
-              Serial.println();
-              }
-              break;
-     case 4: 
+//      case 3: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              forward_right(70,90);
+//              Serial.print(" Right 75 ");
+//              Serial.println();
+//              }
+//              break;
+        case 1: 
               Serial.print(" Forward ");
               Serial.println();
               
               break;
-      case 5: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              forward_left(90,75);
-              Serial.print(" left 75 ");
-              Serial.println();
-              }
-              break;
-      case 6: 
+//      case 5: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              forward_left(90,75);
+//              Serial.print(" left 75 ");
+//              Serial.println();
+//              }
+//              break;
+      case 2: 
               time1 = millis();
               while(millis()<=time1+150)
               {
@@ -340,24 +338,24 @@ void controller(long cm1)
               Serial.println();
               }
               break;
-      case 7: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              left();
-              Serial.print(" Left 45 ");
-              Serial.println();
-              }
-              break;
-      case 8: 
-              time1 = millis();
-              while(millis()<=time1+200)
-              {
-              left();
-              Serial.print(" Left 30 ");
-              Serial.println();
-              }
-              break;
+//      case 7: 
+//              time1 = millis();
+//              while(millis()<=time1+150)
+//              {
+//              left();
+//              Serial.print(" Left 45 ");
+//              Serial.println();
+//              }
+//              break;
+//      case 8: 
+//              time1 = millis();
+//              while(millis()<=time1+200)
+//              {
+//              left();
+//              Serial.print(" Left 30 ");
+//              Serial.println();
+//              }
+//              break;
  
       default:
               break;        
@@ -366,7 +364,7 @@ void controller(long cm1)
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int cm1;
+  float cm1;
   cm1 = measuredistance();
   controller(cm1);
     
