@@ -3,7 +3,7 @@
 #include <Servo.h>
 
 Servo myservo;
-int cm_pos[5]; // for cm measurement at each position of servo
+int cm_pos[3]; // for cm measurement at each position of servo
 
 void setup() {
   // put your setup code here, to run once:
@@ -18,11 +18,11 @@ long microsecondsToCentimeters(long microseconds) {
     return microseconds / 29.0 / 2.0;
 }
 
-long measuredistance()
+float measuredistance()
 { 
   //function to return value in cm from the ultrasonic sensor
   
-    long duration, inches, cm, cm1,cm2;
+    float duration, inches, cm, cm1,cm2;
 
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
@@ -54,9 +54,9 @@ long measuredistance()
 
 void servo()
 { 
-  int pos[5]={0, 45, 90, 135, 180};
+  int pos[3]={0, 90, 180};
 
-  for(int i=0;i<5; i++)
+  for(int i=0;i<3; i++)
  {
    myservo.write(pos[i]);
    delay(1000);
@@ -70,25 +70,14 @@ void forward()
 
    digitalWrite(in3, LOW);
    digitalWrite(in4, HIGH);
-   analogWrite(enB, 60);
+   analogWrite(enB, 85);
    digitalWrite(in1, HIGH);
    digitalWrite(in2, LOW);
-   analogWrite(enA, 75);
+   analogWrite(enA, 90);
    // different speeds to the motors in order to make thr robot go in straight direction
 }
 
-// stop1 function to make robot stop after tracing four sides of square
-void reverse()
-{
- int in1=6,in2=7,in3=8,in4=9,enA=5,enB=11; 
-
-   digitalWrite(in3, HIGH);
-   digitalWrite(in4, LOW);
-   analogWrite(enB, 150);
-   digitalWrite(in1, LOW);
-   digitalWrite(in2, HIGH);
-   analogWrite(enA, 150);
- }
+// stop1 function to make robot stop
 
 void stop1()
 {
@@ -134,28 +123,24 @@ void controller(long cm1)
 {
   int x = 0;
   unsigned long time1;
-  
-  if(cm1>5.0)
+  myservo.write(90);
+  if(cm1>10.0)
   { forward();
     Serial.print(" forward ");
     Serial.println();
   }
-  else if( cm1<=5.0)
+  else if( cm1<=10.0)
   {
-    reverse();
-    Serial.print(" reverse ");
-    Serial.println();
-    delay(400);
     stop1();
-    Serial.print(" stop ");
+    Serial.print(" Obstacle!! STOP!! ");
     Serial.println();
     delay(500);
     servo();
     Serial.print(" SERVO SEARCHING ");
     Serial.println();
-    int large=cm_pos[0];
+    float large=cm_pos[0];
 
-    for( int j=1;j<5;j++)
+    for( int j=0;j<3;j++)
     {
       if(cm_pos[j]>large)
       {
@@ -175,29 +160,11 @@ void controller(long cm1)
               }
               myservo.write(90);
               break;
+
       case 1: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              right();
-              Serial.print(" Right 45 ");
-              Serial.println();
-              }
-              myservo.write(90);
-              break;
-      case 2: 
               break;        
-      case 3: 
-              time1 = millis();
-              while(millis()<=time1+150)
-              {
-              left();
-              Serial.print(" Left 45 ");
-              Serial.println();
-              }
-              myservo.write(90);
-              break;
-      case 4: 
+
+      case 2: 
               time1 = millis();
               while(millis()<=time1+300)
               {
@@ -213,9 +180,10 @@ void controller(long cm1)
   }
 }
 
-void loop() {
+void loop() 
+{
   // put your main code here, to run repeatedly:
-  int cm1;
+  float cm1;
   cm1 = measuredistance();
   controller(cm1);
     
